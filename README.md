@@ -1,2 +1,1 @@
-# jessy
-
+## jessy is a skeleton of js application with preconfigured develop environment based on docker
