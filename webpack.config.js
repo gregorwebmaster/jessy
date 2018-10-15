@@ -1,6 +1,7 @@
 let webpack = require("webpack");
 let ExtractTextPlugin = require("extract-text-webpack-plugin");
 let LiveReloadPlugin = require("webpack-livereload-plugin");
+let HtmlWebpackPlugin = require('html-webpack-plugin');
 let path = require('path');
 
 let production = process.env.NODE_ENV === "production" ? true : false;
@@ -18,7 +19,7 @@ module.exports = () => {
         },
 
         output: {
-            path: __dirname + '/public/js/',
+            path: __dirname + '/dist/js/',
             filename: '[name].js'
         },
 
@@ -115,6 +116,12 @@ module.exports = () => {
             new webpack.ProvidePlugin({
                 $: "jquery",
                 jQuery: "jquery"
+            }),
+            new HtmlWebpackPlugin({
+                chunks: ['main'],
+                inject: 'head',
+                template: path.resolve(__dirname + '/resources/templates/index.html'),
+                filename: path.resolve(__dirname + '/dist/index.html')
             })
         ]
     };
