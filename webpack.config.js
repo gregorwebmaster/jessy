@@ -13,8 +13,8 @@ module.exports = () => {
     let templateModules = {
         entry: {
             main: [
-                './app/modules/main.js',
-                './resources/scss/modules/main.scss'
+                './app/main.js',
+                './resources/scss/main.scss'
             ]
         },
 

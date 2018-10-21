@@ -10,15 +10,17 @@
 * ********************** */
 
 //  1.1 import settings & fonts
-@import "./../imports/imports";
+@import "imports/main_imports";
 @import url('https://fonts.googleapis.com/css?family=Raleway:100,600');
 
 //  1.2 general classes
 html,
 body {
     background-color: #fff;
-    background-image: url("../../images/bg_index.jpg");
-    color: #636b6f;
+    background-image: url("../images/bg_index.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: $body_color;
     font-family: 'Raleway', sans-serif;
     font-weight: 100;
     height: 100vh;
@@ -63,7 +65,7 @@ body {
 .links {
     margin-top: 180px;
     & a{
-        color: #636b6f;
+        color: $body_color;
         padding: 0 25px;
         font-size: 12px;
         font-weight: 600;
