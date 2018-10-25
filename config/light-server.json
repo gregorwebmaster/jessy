@@ -1,0 +1,16 @@
+{
+  "serve": "dist",
+  "port": 8000,
+  "bind": "localhost",
+  "watchexps": [
+    "dist/js/*.js",
+    "dist/css/*.css",
+    "dist/**.html"
+  ],
+  "interval": 500,
+  "delay": 0,
+  "noReload": false,
+  "quiet": false,
+  "open": true,
+  "http2": false
+}

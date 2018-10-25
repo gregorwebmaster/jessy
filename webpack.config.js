@@ -1,33 +1,47 @@
-let webpack = require("webpack");
-let ExtractTextPlugin = require("extract-text-webpack-plugin");
-let LiveReloadPlugin = require("webpack-livereload-plugin");
-let HtmlWebpackPlugin = require('html-webpack-plugin');
-let path = require('path');
+const webpack = require("webpack");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const LiveReloadPlugin = require("webpack-livereload-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const path = require('path');
 
 let production = process.env.NODE_ENV === "production" ? true : false;
-
 production ? console.log("Enable production mode.") : null;
 
-module.exports = () => {
+module.exports = {
 
-    let templateModules = {
-        entry: {
-            main: [
-                './app/main.js',
-                './resources/scss/main.scss'
-            ]
+    entry: {
+        main: [
+            './app/main.js',
+            './resources/scss/main.scss'
+        ]
+    },
+
+    output: {
+        path: __dirname + '/dist/',
+        filename: 'js/[name].js'
+    },
+
+    optimization: {
+        minimizer: production ? [
+            new UglifyJsPlugin({
+                cache: true,
+                parallel: true
+            }),
+            new OptimizeCSSAssetsPlugin({})
+        ] : []
+    },
+
+    watchOptions: {
+        aggregateTimeout: 300
+    },
+
+    module: {
+        rules: [{
+            test: /\.css$/,
+            use: ["style-loader", "css-loader"]
         },
-
-        output: {
-            path: __dirname + '/dist/js/',
-            filename: '[name].js'
-        },
-
-        module: {
-            rules: [{
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"]
-            },
 
             {
                 test: /\.s[ac]ss$/,
@@ -108,47 +122,20 @@ module.exports = () => {
                 loader: "babel-loader",
                 exclude: /node_modues/
             }
-            ]
-        },
-
-        plugins: [
-            new ExtractTextPlugin("../css/[name].css"),
-            new webpack.ProvidePlugin({
-                $: "jquery",
-                jQuery: "jquery"
-            }),
-            new HtmlWebpackPlugin({
-                chunks: ['main'],
-                inject: 'head',
-                template: path.resolve(__dirname + '/resources/templates/index.html'),
-                filename: path.resolve(__dirname + '/dist/index.html')
-            })
         ]
-    };
+    },
 
-    if (production) {
-        templateModules.plugins.push(
-            new webpack.optimize.UglifyJsPlugin({
-                beautify: false,
-                mangle: {
-                    screw_ie8: true,
-                    keep_fnames: true
-                },
-                compress: {
-                    screw_ie8: true
-                },
-                comments: false
-            })
-        );
-    }
-    else {
-        templateModules.plugins.push(
-            new LiveReloadPlugin({
-                protocol: "http",
-                appendScriptTag: true
-            })
-        );
-    }
-
-    return templateModules;
+    plugins: [
+        new ExtractTextPlugin("css/[name].css"),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
+        }),
+        new HtmlWebpackPlugin({
+            chunks: ['main'],
+            inject: 'head',
+            template: path.resolve(__dirname + '/resources/templates/index.html'),
+            filename: path.resolve(__dirname + '/dist/index.html')
+        })
+    ]
 };
