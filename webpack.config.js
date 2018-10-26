@@ -1,13 +1,11 @@
 const webpack = require("webpack");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const LiveReloadPlugin = require("webpack-livereload-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const path = require('path');
 
-let production = process.env.NODE_ENV === "production" ? true : false;
-production ? console.log("Enable production mode.") : null;
+const production = process.env.NODE_ENV === "production";
+production ? console.log("Enable production mode.") : console.log("Enable dev mode.");
 
 module.exports = {
 
@@ -19,66 +17,51 @@ module.exports = {
     },
 
     output: {
-        path: __dirname + '/dist/',
-        filename: 'js/[name].js'
+        path: __dirname + '/dist/js/',
+        filename: '[name].js'
     },
 
     optimization: {
         minimizer: production ? [
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: true
-            }),
-            new OptimizeCSSAssetsPlugin({})
+            new UglifyJsPlugin(),
         ] : []
     },
 
-    watchOptions: {
-        aggregateTimeout: 300
-    },
-
     module: {
-        rules: [{
-            test: /\.css$/,
-            use: ["style-loader", "css-loader"]
-        },
-
+        rules: [
             {
                 test: /\.s[ac]ss$/,
-                use: ExtractTextPlugin.extract({
-                    use: [
-                        {
-                            loader: "css-loader",
-                            options: {
-                                sourceMap: true
-                            }
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                sourceMap: true,
-                                plugins: function () {
-                                    return [
-                                        require('precss'),
-                                        require('autoprefixer')
-                                    ];
-                                }
-                            }
-                        },
-                        {
-                            loader: "sass-loader",
-                            options: {
-                                sourceMap: true,
-                                includePaths: [
-                                    path.resolve(__dirname, "./node_modules/foundation-sites"),
-                                    path.resolve(__dirname, "./node_modules/@fortawesome/fontawesome-free-webfonts"),
-                                    path.resolve(__dirname + "/resources/images")
-                                ]
-                            }
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: "css-loader",
+                        options: {
+                            sourceMap: !production,
+                            minimize: production
                         }
-                    ],
-                    fallback: "style-loader"
-                })
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            sourceMap: !production,
+                            plugins: () => [
+                                require('precss'),
+                                require('autoprefixer')
+                            ]
+                        }
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: !production,
+                            includePaths: [
+                                path.resolve(__dirname, "./node_modules/foundation-sites"),
+                                path.resolve(__dirname, "./node_modules/@fortawesome/fontawesome-free"),
+                                path.resolve(__dirname + "/resources/images")
+                            ]
+                        }
+                    }
+                ]
             },
 
             {
@@ -106,15 +89,12 @@ module.exports = {
             },
 
             {
-                test: /\.eot|ttf|woff|woff2|svg$/,
-                loader: "file-loader",
+                test: /\.(eot|ttf|svg|woff|woff2)$/,
+                loader: "url-loader",
                 options: {
+                    limit: 50000,
                     name: "../fonts/[name].[ext]"
-                },
-                include: [
-                    path.resolve(__dirname + "/resources/fonts"),
-                    path.resolve(__dirname + "/node_modules/@fortawesome/fontawesome-free-webfonts")
-                ]
+                }
             },
 
             {
@@ -126,7 +106,10 @@ module.exports = {
     },
 
     plugins: [
-        new ExtractTextPlugin("css/[name].css"),
+        new MiniCssExtractPlugin({
+            filename: "../css/[name].css"
+        }),
+        new webpack.SourceMapDevToolPlugin(),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"

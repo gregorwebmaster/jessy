@@ -3,15 +3,15 @@
   "scripts": {
     "dev": "webpack",
     "watch": "concurrently  \"webpack --watch\" \"light-server -c config/light-server.json\"",
-    "production": "NODE_ENV=production webpack"
+    "production": "NODE_ENV=production webpack -p"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
     "ajv": "^6.0.0",
-    "autoprefixer": "^9.3.1",
-    "babel-loader": "^8.0.4",
-    "concurrently": "^4.0.1",
+    "autoprefixer": ">=9.3.1",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2015": "^6.24.1",
+    "concurrently": ">=4.0.1",
     "copy-webpack-plugin": "^4.5.4",
     "css-loader": "^1.0.0",
     "extract-text-webpack-plugin": "next",
@@ -19,7 +19,8 @@
     "html-webpack-plugin": "^3.2.0",
     "imagemin": "^5.0.0",
     "img-loader": "^3.0.1",
-    "light-server": "^2.6.0",
+    "light-server": ">=2.6.0",
+    "mini-css-extract-plugin": "^0.4.4",
     "node-sass": "^4.9.4",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-loader": "^3.0.0",
@@ -27,16 +28,16 @@
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "uglifyjs-webpack-plugin": "^2.0.1",
+    "url-loader": "^1.1.2",
     "webpack": "^4.23.1",
-    "webpack-cli": "^3.1.2",
-    "webpack-livereload-plugin": "^2.1.1"
+    "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free-brands": "^5.0.13",
-    "@fortawesome/fontawesome-free-regular": "^5.0.13",
-    "@fortawesome/fontawesome-free-solid": "^5.0.13",
-    "@fortawesome/fontawesome-free-webfonts": "^1.0.9",
-    "foundation-sites": "^6.4.1",
-    "jquery": "^3.1.1"
+    "@fortawesome/free-brands-svg-icons": "5.x",
+    "@fortawesome/free-regular-svg-icons": "5.x",
+    "@fortawesome/free-solid-svg-icons": "5.x",
+    "@fortawesome/fontawesome-free": "5.x",
+    "foundation-sites": "^6.4.x",
+    "jquery": "^3.1.x"
   }
 }
